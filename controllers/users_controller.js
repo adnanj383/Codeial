@@ -2,9 +2,20 @@ const User = require('../models/user');
 
 
 module.exports.profile = function(req, res){
-    return res.render('user_profile', {
-        title: 'User Profile'
-    })
+    if(req.cookies.user_id){
+        User.findById(req.cookies.user_id, function(err, user){
+            if(user){
+                return res.render('user_profile',{
+                    title: 'user_profile',
+                    user: user
+                })
+            }else {
+                return res.redirect('/users/sign-in');
+        }
+    });
+    }else{
+        return res.redirect('/users/sign-in');
+    }
 }
 
 
@@ -21,6 +32,11 @@ module.exports.signIn = function(req, res){
     return res.render('user_sign_in', {
         title: "Codeial | Sign In"
     })
+}
+
+//sing out wala code jo ham try kar rhe hai khud se
+module.exports.signOut = function(req, res){
+    return res.redirect('/users/sign-in');
 }
 
 // get the sign up data
